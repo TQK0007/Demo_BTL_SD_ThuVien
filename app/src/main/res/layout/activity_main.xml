@@ -15,6 +15,23 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/img1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="40dp"
+            android:src="@drawable/pngegg"
+            android:tag="@drawable/pngegg"
+            android:onClick="getImgTag"
+            />
+        <ImageView
+            android:id="@+id/img2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="40dp"
+
+            />
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,6 +65,7 @@
                 android:layout_weight="3"
                 android:text="@={account.account_Password}"/>
         </TableRow>
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -56,7 +74,8 @@
                 android:text="Thêm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16dp"/>
+                android:textSize="16dp"
+                />
             <Button
                 android:id="@+id/btnUpdate"
                 android:text="Sửa"

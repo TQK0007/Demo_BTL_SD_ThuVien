@@ -2,16 +2,22 @@ package com.example.code_sd_thuvien;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.example.code_sd_thuvien.dao.AccountDAO;
-import com.example.code_sd_thuvien.dao.DAO;
 import com.example.code_sd_thuvien.dao.RoleDAO;
 import com.example.code_sd_thuvien.dao.StudentDAO;
 import com.example.code_sd_thuvien.database.AppDatabase;
@@ -20,6 +26,7 @@ import com.example.code_sd_thuvien.entity.Role;
 import com.example.code_sd_thuvien.entity.Student;
 import com.example.code_sd_thuvien.databinding.ActivityMainBinding;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,15 +43,47 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<Account> adapter;
     private Account accountModify=null;
 
+    private int valueImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
+
+
         InitQuery();
         getWedget();
         createAdapterAccount();
+
+
+
+        //        2131165415
+        int idSource = R.drawable.pngegg;
+
+        ImageView img2 = mainBinding.img2;
+
+
+        ImageView img1 = mainBinding.img1;
+        Drawable drawable = img1.getDrawable();
+        if(drawable instanceof BitmapDrawable)
+        {
+            Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+            String bitmapString = bitmap.toString();
+
+            String bitMapToString = convertBitmapToString(bitmap);
+            System.out.println("Bit map to String: "+bitMapToString);
+
+            Bitmap bitmap2 = convertStringToBitmap(bitMapToString);
+
+            System.out.println("String to bitmap: "+bitmap2);
+            System.out.println("Base bitmap: "+bitmap);
+
+
+            Drawable drawable1 = new BitmapDrawable(getResources(),bitmap2);
+            img2.setImageDrawable(drawable1);
+        }
+
 
         // btnAdd là id của button thêm đã được cấu hình ở view
         mainBinding.btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -107,10 +146,30 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private String convertBitmapToString(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+
+    private Bitmap convertStringToBitmap(String encodedString) {
+        try {
+            byte[] decodedBytes = Base64.decode(encodedString, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
     private void getWedget()
     {
 //        kết nối layout với activity
-        mainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         // tạo 1 đối tượng mới và liên kết qua view
         Account newAccount = new Account();
@@ -179,5 +238,12 @@ public class MainActivity extends AppCompatActivity {
         roleList.forEach(System.out::println);
     }
 
+    public void getImgTag(View view)
+    {
+        ImageView img  = (ImageView) view;
+//        valueImage = Integer.parseInt(img.getTag().toString());
+        Toast.makeText(this,(String)img.getTag(),Toast.LENGTH_SHORT).show();
+
+    }
 
 }
